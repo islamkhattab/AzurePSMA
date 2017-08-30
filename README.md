@@ -1,6 +1,15 @@
 # Azure AD PowerShell Managment Agent
 This is a custom MIM Managment agent to import Azure AD users using Msol module,users could be either Member or Guest (B2B), then send them back in SharePoint 2016 User Profiles
 
+This agent is tested on the following scenario:
+* SharePoint 2016 On-Prem Farm (Aug 2017 PU) - With User Profile Service Configured and Syncronization Service Configured using MIM 2016
+* Azure AD with Guest (B2B) users added and immutible id set
+
+> Import PowerShell File Configurations
+* $usersType variable - 'All' for all user types, 'Member' for Azure AD Users and 'Guest' for B2B users
+* $restrictImmutableId - Imports only users with ImmutableId property set
+* $DebugFilePath - Outputs powershell messages
+
 ## Prerequisites
 
 ### SharePoint Managment Agent installed and configured
