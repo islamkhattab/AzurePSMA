@@ -55,7 +55,7 @@ Schema.ps1 | The schema of the AzureADUser that will be imported to MIM
     * Object Type as configured in the Schema.ps1 file.
     ![picture alt](https://i2.wp.com/dl.dropboxusercontent.com/u/76015/BlogImages/AzureADMA/AzureADMA-4.PNG?resize=525%2C392&ssl=1)
     
-    * Attributes as configured in the Schema.ps1 file.
+    * Attributes as configured in the Schema.ps1 file
     ![picture alt](https://i2.wp.com/dl.dropboxusercontent.com/u/76015/BlogImages/AzureADMA/AzureADMA-5.PNG?resize=525%2C393&ssl=1)
     
     * Anchor as per the Schema.ps1 file.
