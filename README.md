@@ -44,27 +44,35 @@ Schema.ps1 | The schema of the AzureADUser that will be imported to MIM
 
     * With the Granfeldt PowerShell Management Agent installed on your FIM/MIM Synchronisation Server, in the Synchronisation Server Manager select Create Management Agent and choose "PowerShell" from the list of Management Agents to create.
     As this example is for Users, I’ve named my MA accordingly "AzureADUsers"
+    
     ![picture alt](https://i1.wp.com/dl.dropboxusercontent.com/u/76015/BlogImages/AzureADMA/AzureADMA-1.PNG?resize=525%2C392&ssl=1)
     
     * For the schema script add your schema.ps1 file full path and the azure ad amdin account, the password will not be used from this screen as well use the stored cred file instead
+    
     ![picture alt](https://i0.wp.com/dl.dropboxusercontent.com/u/76015/BlogImages/AzureADMA/AzureADMA-2.PNG?resize=525%2C394&ssl=1)
     
     * Paths to the Import, Export and Password scripts. Note: the Export and Password PS1 scripts files exist but are empty.
+    
     ![picture alt](https://i1.wp.com/dl.dropboxusercontent.com/u/76015/BlogImages/AzureADMA/AzureADMA-3.PNG?resize=525%2C393&ssl=1)
     
     * Object Type as configured in the Schema.ps1 file.
+    
     ![picture alt](https://i2.wp.com/dl.dropboxusercontent.com/u/76015/BlogImages/AzureADMA/AzureADMA-4.PNG?resize=525%2C392&ssl=1)
     
     * Attributes as configured in the Schema.ps1 file
+    
     ![picture alt](https://i2.wp.com/dl.dropboxusercontent.com/u/76015/BlogImages/AzureADMA/AzureADMA-5.PNG?resize=525%2C393&ssl=1)
     
     * Anchor as per the Schema.ps1 file.
+    
     ![picture alt](https://i0.wp.com/dl.dropboxusercontent.com/u/76015/BlogImages/AzureADMA/AzureADMA-6.PNG?resize=525%2C392&ssl=1)
     
     * Project the output to person object
+    
     ![picture alt](https://i0.wp.com/dl.dropboxusercontent.com/u/76015/BlogImages/AzureADMA/AzureADMA-6.PNG?resize=525%2C392&ssl=1)
     
-    * Configure Attribute flow 
+    * Configure Attribute flow
+    
     ![picture alt](https://i0.wp.com/dl.dropboxusercontent.com/u/76015/BlogImages/AzureADMA/AzureADMA-6.PNG?resize=525%2C392&ssl=1)
     
  * Add two Run Profiles to your Managment Agent [FullImport - FullSync], You can use any configurations as you needs this is just for the sake of the demo
