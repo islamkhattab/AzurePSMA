@@ -1,3 +1,29 @@
+<#
+.SYNOPSIS
+import - Imports Azure AD users to PowerShell Managment Agent on MIM
+
+.DESCRIPTION 
+This script is part of the scripts that are used based on PSMA to import Azure AD users to PowerShell Managment Agent on MIM
+
+.EXAMPLE
+.\Import.ps1 -Username "azure.admin@yourdomain.com" -Password "Any String as Credentials are managed by PSStored Credentials" -Op
+erationType "Full" -usepagedimport $false
+
+.LINK
+https://github.com/islamkhattab/AzurePSMA/blob/master/README.md 
+    
+.NOTES
+Written by: Islam Khattab
+
+Find me on:
+
+* Mail:     islam.n.khattab@gmail.com
+* My Blog:	http://islamkhattab.blogspot.com.eg/
+* LinkedIn:	https://www.linkedin.com/in/islamkhattab
+* Github:	https://github.com/islamkhattab
+
+#>
+
 param (
     $Username,
 	$Password,
