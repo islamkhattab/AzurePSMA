@@ -37,13 +37,41 @@ param (
 # **************  Configuration *******************
 # 'All' for all user types, 'Member' for Azure AD Users and 'Guest' for B2B users
 $usersType = "Guest"
+
+# Restirict only syncing users with property 'ImmutableId' set and not null
 $restrictImmutableId = $true 
 
+# Constructs a string for ADFS Claim token to be used in some scenarios i.e. i:05.t|adfs|islam.khattab@itworx.com
+$adfsClaimTokenPrefix = "adfs" 
+
+# Exports users pictures into a temp folder then adds the binary array of the photo to the Azure User Object Imported to object space
+$imageImportEnabled = $true
 
 # **************  Loading Sotered Azure AD Global Admin Credentials *******************
+
 # Should be set for Functions-PSStoredCredentials.ps1
 $KeyPath = "$PSScriptRoot" 
 . "$PSScriptRoot\Functions-PSStoredCredentials.ps1"
+
+
+# Temp folder used to export users images to
+if($imageImportEnabled){
+    if(!(Test-Path "$PSScriptRoot\UserPhotos"))
+    {
+        $userPhotosTempDir = New-Item -Path "$PSScriptRoot\UserPhotos" -ItemType directory
+    }
+    else
+    {
+        $userPhotosTempDir = Get-Item -Path "$PSScriptRoot\UserPhotos"
+    }
+}
+
+# Creates the debug output folder if does not exist
+if(!(Test-Path "$PSScriptRoot\Debug"))
+{
+    $DebugFolder = New-Item -Path "$PSScriptRoot\Debug" -ItemType directory
+}
+
 
 $DebugFilePath = "$PSScriptRoot\Debug\AADImport.txt"
 
@@ -70,9 +98,13 @@ $creds = Get-StoredCredential -UserName $Username
 
 Connect-MsolService -Credential $creds
 
+# Connects to Azure AD PowerShell Managment Shell to get user photos using Get-AzureADUserThumbnailPhoto command
+if($imageImportEnabled){
+    Connect-AzureAD -Credential $creds
+}
 # *********************** IMPORT **********************************
 
-# Get results
+# Get users result
 if($usersType -eq "Guest" -or $usersType -eq "Member"){
     $users = Get-MsolUser -All | ? {$_.UserType -eq $usersType}
 }
@@ -95,6 +127,7 @@ else {
 }
 
 # ********************* Process users into the MA *******************
+
  ForEach($user in $tenantObjects) 
     {
         if ($user.ValidationStatus -eq "Healthy")
@@ -136,15 +169,30 @@ else {
             $obj.Add("AADUsageLocation",$user.UsageLocation)
             $obj.Add("AADJobTitle",$user.Title)
             $obj.Add("AADDepartment",$user.Department)
-            $obj.Add("AADMobile",$user.Mobile)  
+            $obj.Add("AADMobile",$user.MobilePhone)  
             $obj.Add("AADSipProxyAddress",$user.SIPProxyAddress)       
                        
             $obj.Add("AADCity",$user.city)
 
+            if($imageImportEnabled){
+                Get-AzureADUserThumbnailPhoto -ObjectId $user.ObjectId -FileName $user.ObjectId -FilePath "$PSScriptRoot\UserPhotos"
+                $photoPath = $path + "\" + $user.ObjectId + "*"
+                $imageFinder = (ls $photoPath)
+
+                if($imageFinder -ne $null -and $imageFinder.Count -ge 1){
+                    $image = $imageFinder[0]
+                    $userImageByte = [System.IO.File]::ReadAllBytes($image.FullName)
+                    $obj.Add("AADPicture",$userImageByte)
+                    $image.Delete()
+                }
+            }
+
             if($obj.AADSignInName -ne $null -and $obj.AADSignInName -ne ''){
                 $signInNameParts =  $obj.AADSignInName.Split('@')
                 if($signInNameParts.Length -eq 2){
-                    
+                    $adfsSPClaimToken = "i:05.t|" + $adfsClaimTokenPrefix + "|" + $obj.AADSignInName.ToLower()
+                    $obj.Add("AADADFSClaimToken", $adfsSPClaimToken) 
+
                     $accountName = $signInNameParts[0]
                     $FQDN = $signInNameParts[1]
                     
@@ -168,11 +216,17 @@ else {
                 $obj.Add("[ErrorDetail]", "AzurePSMA - Cannot add user's data, Distinguished Name cannot be constructed - Azure AD Property SignInName is null or empty")  
             }
 
-            if($user.AlternativeSecurityIds -ne $null -and $user.AlternativeSecurityIds.Length -gt 0){
+            if($user.AlternativeSecurityIds -ne $null -and $user.AlternativeSecurityIds.Count -gt 0){
                 $BinarySid = $user.AlternativeSecurityIds[0].Key
 
-                #Add the SID to the user in the connector space
-                $obj.Add("AADSID",$BinarySid)
+                if($user.AlternativeSecurityIds[0].Key -ne $null){
+                    #Add the SID to the user in the connector space
+                    $obj.Add("AADSID",$BinarySid)
+                }
+                else {
+                    $obj.Add("[ErrorName]", "read-error")
+                    $obj.Add("[ErrorDetail]", "AzurePSMA - Cannot add user's data, User SID 'AlternativeSecurityIds' object Key is null") 
+                }
             }
             else {
                 $obj.Add("[ErrorName]", "read-error")
@@ -188,7 +242,9 @@ else {
 
 # ***********************************************************
 
-
+if($imageImportEnabled){
+    $userPhotosTempDir.Delete()
+}
 
  "Finished Import as : " + $OperationType + (Get-Date) | Out-File $DebugFile -Append
 

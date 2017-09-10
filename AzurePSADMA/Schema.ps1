@@ -2,6 +2,7 @@ $obj = New-Object -Type PSCustomObject
 $obj | Add-Member -Type NoteProperty -Name "Anchor-ID|String" -Value "08572d0c-e5e6-4b9a-bdf1-576de90aa1d9"
 $obj | Add-Member -Type NoteProperty -Name "objectID|String" -Value "08572d0c-e5e6-4b9a-bdf1-576de90aa1d9"
 $obj | Add-Member -Type NoteProperty -Name "AADSID|Binary" -Value 0x10
+$obj | Add-Member -Type NoteProperty -Name "AADPicture|Binary" -Value 0x10
 $obj | Add-Member -Type NoteProperty -Name "objectClass|String" -Value "AzureADUser"
 $obj | Add-Member -Type NoteProperty -Name "AADDisplayName|String" -Value "Mary Jay Bligh"
 $obj | Add-Member -Type NoteProperty -Name "AADGivenName|String" -Value "Mary"
@@ -23,6 +24,7 @@ $obj | Add-Member -Type NoteProperty -Name "AADOtherMails|String[]" -Value ("use
 $obj | Add-Member -Type NoteProperty -Name "AADCity|String" -Value "Sydney" 
 $obj | Add-Member -Type NoteProperty -Name "AADDistinguishedName|String" -Value "CN=Azure User test,DC=islamnkhattaboutlook,DC=onmicrosoft,DC=com" 
 $obj | Add-Member -Type NoteProperty -Name "AADAccountName|String" -Value "azure.user1" 
+$obj | Add-Member -Type NoteProperty -Name "AADADFSClaimToken|String" -Value "i:05.t|adfs3|azure.user1@yourdomain.com" 
                                                       
 $obj
 
