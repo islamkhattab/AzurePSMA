@@ -8,13 +8,16 @@ This agent is tested on the following scenario:
 > Import PowerShell File Configurations
 * $usersType variable - 'All' for all user types, 'Member' for Azure AD Users and 'Guest' for B2B users
 * $restrictImmutableId - Imports only users with ImmutableId property set
+* $adfsClaimTokenPrefix - Constructs a string for ADFS Claim token to be used in some scenarios i.e. i:05.t|adfs|islam.khattab@itworx.com
+* $imageImportEnabled - Exports users pictures into a temp folder then adds the binary array of the photo to the Azure User Object Imported to object space
 * $DebugFilePath - Outputs powershell messages
 
 > Import PowerShell File Changes
 * You can update the properties and mappings to fit your scenario
 * Any changes in the import.ps1 should reflect in the schema.ps1 file as well
 
-> User photos is still not implemented
+> User photos is now implemented
+* Just set the '$imageImportEnabled' variable to $true to enable user photo export
 
 ## Prerequisites
 
